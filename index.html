@@ -1,0 +1,650 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Premium Digital Agency — Scale Your Social Growth</title>
+    <style>
+        :root {
+            --bg: #0b0f14;
+            --card: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --accent-start: #2dd4bf;
+            --accent-end: #e879f9;
+            --accent: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+            --muted: #a8b3c2;
+            --glass-blur: blur(18px);
+            --max-width: 1200px;
+            --radius: 14px;
+            --glass-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            color: #e6eef8;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            background:
+                radial-gradient(600px 400px at 10% 10%, rgba(45, 212, 191, 0.06), transparent 10%),
+                radial-gradient(500px 300px at 90% 80%, rgba(232, 121, 249, 0.05), transparent 8%),
+                var(--bg);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.45;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* NAVBAR */
+        header {
+            position: sticky;
+            top: 18px;
+            width: 100%;
+            z-index: 40;
+            pointer-events: auto
+        }
+
+        .nav-wrap {
+            backdrop-filter: var(--glass-blur) saturate(140%);
+            -webkit-backdrop-filter: blur(14px) saturate(140%);
+            background: var(--card);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            border-radius: 40px;
+            margin: 0 auto;
+            padding: 10px 14px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 18px
+        }
+
+        .logo .mark {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--accent);
+            box-shadow: 0 6px 30px rgba(46, 199, 180, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #021021;
+            font-weight: 800
+        }
+
+        .menu {
+            display: flex;
+            gap: 18px;
+            align-items: center
+        }
+
+        .menu a {
+            padding: 8px 10px;
+            border-radius: 10px;
+            color: var(--muted);
+            font-weight: 600
+        }
+
+        .menu a:hover {
+            color: #fff
+        }
+
+        .auth {
+            display: flex;
+            gap: 10px;
+            align-items: center
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 12px;
+            border: 0;
+            background: var(--accent);
+            color: #021021;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(46, 199, 180, 0.12)
+        }
+
+        .btn.ghost {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--muted);
+            font-weight: 600
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            cursor: pointer
+        }
+
+        /* HERO */
+        .hero {
+            padding: 68px 0 56px;
+            display: grid;
+            grid-template-columns: 1fr 520px;
+            gap: 40px;
+            align-items: center
+        }
+
+        .hero h1 {
+            font-size: 44px;
+            margin: 0;
+            line-height: 1.02;
+            background: var(--accent);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent
+        }
+
+        .hero p {
+            color: var(--muted);
+            margin: 18px 0 28px;
+            max-width: 56ch
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 14px
+        }
+
+        .glass-card {
+            background: var(--card);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: blur(14px);
+            padding: 18px;
+            border-radius: 16px;
+            box-shadow: var(--glass-shadow)
+        }
+
+        .visual {
+            height: 360px;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.0));
+            position: relative
+        }
+
+        .visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        /* SERVICES */
+        .section {
+            padding: 42px 0
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px
+        }
+
+        .service-card {
+            padding: 18px;
+            border-radius: 14px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            transition: transform .28s, box-shadow .28s
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(2, 6, 23, 0.6)
+        }
+
+        .icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            display: grid;
+            place-items: center;
+            color: #021021;
+            font-weight: 700
+        }
+
+        /* WHY CHOOSE US */
+        .choose-grid {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap
+        }
+
+        .choose-item {
+            flex: 1;
+            min-width: 180px;
+            padding: 18px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04)
+        }
+
+        /* HOW IT WORKS */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px
+        }
+
+        .step {
+            padding: 18px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            text-align: center
+        }
+
+        /* TESTIMONIALS & STATS */
+        .test-list {
+            display: flex;
+            gap: 12px;
+            overflow: auto;
+            padding-bottom: 6px
+        }
+
+        .testimonial {
+            min-width: 280px;
+            padding: 18px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04)
+        }
+
+        .stats {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap
+        }
+
+        .stat {
+            flex: 1;
+            min-width: 160px;
+            padding: 16px;
+            border-radius: 12px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            text-align: center
+        }
+
+        /* FINAL CTA & FOOTER */
+        .final-cta {
+            padding: 36px;
+            border-radius: 16px;
+            background: linear-gradient(90deg, rgba(45, 212, 191, 0.06), rgba(232, 121, 249, 0.06));
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        footer {
+            padding: 28px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+            color: var(--muted)
+        }
+
+        /* Responsive */
+        @media (max-width:980px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                padding: 46px 0
+            }
+
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .steps {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        @media (max-width:520px) {
+            .menu {
+                display: none
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr
+            }
+
+            .test-list {
+                gap: 10px
+            }
+
+            .logo {
+                font-size: 16px
+            }
+
+            .hero h1 {
+                font-size: 28px
+            }
+        }
+
+        /* Smooth scroll target offset */
+        :target {
+            scroll-margin-top: 84px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container nav-wrap">
+            <nav>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="logo">
+                        <div class="mark">MS</div>Maan Squad
+                    </div>
+                </div>
+                <div class="menu" role="navigation" aria-label="Main menu">
+                    <a href="#home">Home</a>
+                    <a href="#services">Services</a>
+                    <a href="#plans">Plans</a>
+                    <a href="#about">About Us</a>
+                    <a href="#stories">Success Stories</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="auth">
+                    <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌓</button>
+                    <a class="ghost-link" href="#login"><button class="btn ghost">Login</button></a>
+                    <a href="#signup"><button class="btn">Sign Up</button></a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" id="home">
+        <section class="hero">
+            <div>
+                <h1>Scale Your Social Growth While We Handle Everything.</h1>
+                <p>From content creation and social media management to branding and growth strategies — our expert team helps influencers, businesses, and creators grow faster.</p>
+                <div class="hero-ctas">
+                    <a href="#plans"><button class="btn">Get Started</button></a>
+                    <a href="#plans"><button class="btn ghost">View Plans</button></a>
+                </div>
+                <div style="margin-top:20px" class="glass-card" aria-hidden="false">
+                    <strong style="display:block">Trusted by top creators & brands</strong>
+                    <div style="display:flex;gap:8px;margin-top:10px;color:var(--muted)">
+                        <span>Logo1</span><span>Logo2</span><span>Logo3</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card visual" aria-hidden="true">
+                <!-- REPLACE: Insert your 3D teamwork/team illustration or Lottie here -->
+                <img src="REPLACE-ILLUSTRATION.png" alt="Teamwork illustration showing social media growth" />
+            </div>
+        </section>
+
+        <section id="services" class="section">
+            <h2 style="margin-bottom:18px">Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="icon">SM</div>
+                    <div><strong>Social Media Management</strong>
+                        <div style="color:var(--muted)">Daily content, community & analytics</div>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="icon">VE</div>
+                    <div><strong>Video Editing</strong>
+                        <div style="color:var(--muted)">Short-form and long-form production</div>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="icon">GD</div>
+                    <div><strong>Graphic Design</strong>
+                        <div style="color:var(--muted)">Brand assets, thumbnails, creatives</div>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="icon">YT</div>
+                    <div><strong>YouTube Management</strong>
+                        <div style="color:var(--muted)">Optimization & channel growth</div>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="icon">TT</div>
+                    <div><strong>TikTok Growth</strong>
+                        <div style="color:var(--muted)">Trend-first short-form strategy</div>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="icon">BM</div>
+                    <div><strong>Branding & Marketing</strong>
+                        <div style="color:var(--muted)">Positioning and campaign design</div>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="icon">WD</div>
+                    <div><strong>Website Design & Development</strong>
+                        <div style="color:var(--muted)">Conversion-first sites</div>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="icon">CP</div>
+                    <div><strong>Custom Projects</strong>
+                        <div style="color:var(--muted)">Tailored services on demand</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Why Choose Us</h2>
+            <div class="choose-grid">
+                <div class="choose-item"><strong>Professional Team</strong>
+                    <div style="color:var(--muted)">Senior social managers, editors & strategists.</div>
+                </div>
+                <div class="choose-item"><strong>Affordable Packages</strong>
+                    <div style="color:var(--muted)">Transparent pricing built for growth.</div>
+                </div>
+                <div class="choose-item"><strong>Dedicated Account Managers</strong>
+                    <div style="color:var(--muted)">One point of contact for every client.</div>
+                </div>
+                <div class="choose-item"><strong>24/7 Support</strong>
+                    <div style="color:var(--muted)">Round-the-clock help and monitoring.</div>
+                </div>
+                <div class="choose-item"><strong>Proven Growth Strategies</strong>
+                    <div style="color:var(--muted)">Data-driven campaigns and content plans.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="plans" class="section">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step"><strong>1. Create an Account</strong>
+                    <div style="color:var(--muted)">Sign up and tell us your goals.</div>
+                </div>
+                <div class="step"><strong>2. Choose a Subscription Plan</strong>
+                    <div style="color:var(--muted)">Pick the plan that fits your growth stage.</div>
+                </div>
+                <div class="step"><strong>3. Get Assigned an Expert Team</strong>
+                    <div style="color:var(--muted)">We match specialists to your needs.</div>
+                </div>
+                <div class="step"><strong>4. Watch Your Brand Grow</strong>
+                    <div style="color:var(--muted)">Monthly reporting and iterative growth.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stories" class="section">
+            <h2>Success Stories</h2>
+            <div class="test-list" aria-label="Client testimonials">
+                <div class="testimonial">
+                    <div style="display:flex;gap:12px;align-items:center"><img src="REPLACE-avatar1.jpg" alt="" style="width:44px;height:44px;border-radius:8px" />
+                        <div><strong>M Abdullah.K</strong>
+                            <div style="color:var(--muted);font-size:13px">Influencer</div>
+                        </div>
+                    </div>
+                    <p style="margin-top:12px;color:var(--muted)">"The team doubled our engagement in 60 days — smart, fast, and reliable."</p>
+                    <div style="margin-top:8px;color:#ffd166">★★★★★</div>
+                </div>
+
+                <div class="testimonial">
+                    <div style="display:flex;gap:12px;align-items:center"><img src="REPLACE-avatar2.jpg" alt="" style="width:44px;height:44px;border-radius:8px" />
+                        <div><strong>Ch. Usman Ali</strong>
+                            <div style="color:var(--muted);font-size:13px">E-commerce</div>
+                        </div>
+                    </div>
+                    <p style="margin-top:12px;color:var(--muted)">"A seamless process and clear results — our ROAS improved by 3x."</p>
+                    <div style="margin-top:8px;color:#ffd166">★★★★★</div>
+                </div>
+
+                <div class="testimonial">
+                    <div style="display:flex;gap:12px;align-items:center"><img src="REPLACE-avatar3.jpg" alt="" style="width:44px;height:44px;border-radius:8px" />
+                        <div><strong>S. Azeem Shah</strong>
+                            <div style="color:var(--muted);font-size:13px">Creator</div>
+                        </div>
+                    </div>
+                    <p style="margin-top:12px;color:var(--muted)">"Editors and designers are outstanding — I finally have a brand that looks premium."</p>
+                    <div style="margin-top:8px;color:#ffd166">★★★★★</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Numbers That Matter(mzaq kar raha hu yaar )</h2>
+            <div class="stats">
+                <div class="stat">
+                    <div style="font-size:28px">500+</div>
+                    <div style="color:var(--muted)">Clients Served</div>
+                </div>
+                <div class="stat">
+                    <div style="font-size:28px">1000+</div>
+                    <div style="color:var(--muted)">Projects Completed</div>
+                </div>
+                <div class="stat">
+                    <div style="font-size:28px">50+</div>
+                    <div style="color:var(--muted)">Expert Team Members</div>
+                </div>
+                <div class="stat">
+                    <div style="font-size:28px">98%</div>
+                    <div style="color:var(--muted)">Client Satisfaction</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section final-cta" aria-labelledby="final-cta-title">
+            <div>
+                <h3 id="final-cta-title" style="margin:0">Stop Managing Everything Alone. Build Your Brand With a Dedicated Team.</h3>
+                <div style="color:var(--muted);margin-top:8px">Launch faster with a team that handles creation, publishing, and growth.</div>
+            </div>
+            <div>
+                <a href="#signup"><button class="btn" style="min-width:140px">Join Now</button></a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="container" id="contact">
+        <div style="display:flex;justify-content:space-between;gap:20px;align-items:flex-start;flex-wrap:wrap">
+            <div style="max-width:420px">
+                <div style="display:flex;gap:10px;align-items:center">
+                    <div class="mark" style="width:44px;height:44px;border-radius:10px;background:var(--accent)">MS</div><strong>Maan Squadr</strong>
+                </div>
+                <p style="color:var(--muted)">Premium on-demand teams for creators and brands. Contact us for custom enterprise solutions.</p>
+                <div style="display:flex;gap:10px;color:var(--muted)"><span>✉️ maansquad@gmail.com</span><span>📞 +92 349 536 5263</span></div>
+            </div>
+
+            <div style="display:flex;gap:36px">
+                <div>
+                    <strong>Quick links</strong>
+                    <div style="color:var(--muted);margin-top:8px">
+                        <div><a href="#services">Services</a></div>
+                        <div><a href="#plans">Plans</a></div>
+                        <div><a href="#stories">Success Stories</a></div>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>Follow Maan Squad on</strong>
+                    <div style="color:var(--muted);margin-top:8px">
+                        <div>Tiktok - Facebook - Instagram - YouTube</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top:18px;color:var(--accent);font-size:30px">© 2026 | <bir/> Han G sai he k nai...?.</div>
+    </footer>
+
+    <script>
+        // Smooth scroll for anchor links & sticky nav offset
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href').slice(1);
+                if (!targetId) return;
+                const el = document.getElementById(targetId);
+                if (el) {
+                    e.preventDefault();
+                    const top = el.getBoundingClientRect().top + window.scrollY - 84;
+                    window.scrollTo({
+                        top,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Minimal theme toggle (dark/light)
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            if (document.documentElement.hasAttribute('data-light')) {
+                document.documentElement.removeAttribute('data-light');
+            } else {
+                document.documentElement.setAttribute('data-light', 'true');
+            }
+        });
+
+        // Responsive accessibility: show mobile menu toggle if needed (example hook)
+        // Add further JS for mobile menu and auth modals when integrating.
+    </script>
+</body>
+
+</html>
