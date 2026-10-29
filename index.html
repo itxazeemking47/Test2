@@ -1,385 +1,1178 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Automated Workflows Dashboard</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Font Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif']
-                    },
-                    colors: {
-                        ebay: {
-                            blue: '#0064D2',
-                            red: '#E53238',
-                            yellow: '#F5AF02',
-                            green: '#86B817'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0b0f19;
-            overflow-x: hidden;
-        }
+    <title>NovaFlow — AI Automation Command Center</title>
 
-        /* Fullscreen Canvas Background */
-        #particleCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: auto;
-        }
+    <meta name="description"
+          content="NovaFlow — A next-generation AI automation command center. Automate, explore and grow.">
 
-        /* Glassmorphism Styles */
-        .glass-card {
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+    <meta name="theme-color" content="#050711">
 
-        .glass-card:hover {
-            border-color: rgba(59, 130, 246, 0.3);
-            transform: translateY(-4px);
-            box-shadow: 0 25px 50px -12px rgba(0, 100, 210, 0.25);
-        }
+    <!-- Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-        .glow-btn {
-            position: relative;
-            box-shadow: 0 0 15px rgba(0, 100, 210, 0.35);
-            transition: all 0.3s ease;
-        }
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
 
-        .glow-btn:hover {
-            box-shadow: 0 0 25px rgba(0, 100, 210, 0.65);
-            transform: translateY(-1px);
-        }
+    <!-- Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-        /* Toast Animation */
-        @keyframes slideIn {
-            from { transform: translateY(-100%) scale(0.9); opacity: 0; }
-            to { transform: translateY(0) scale(1); opacity: 1; }
-        }
-
-        .toast-animate {
-            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-    </style>
+    <!-- Our CSS will be added in Step 2 -->
+    <link rel="stylesheet" href="./styles.css">
 </head>
-<body class="text-slate-100 min-h-screen flex flex-col justify-between relative selection:bg-blue-500 selection:text-white">
 
-    <!-- Interactive Particle Background -->
-    <canvas id="particleCanvas"></canvas>
+<body>
 
-    <!-- Toast Notification Container -->
-    <div id="toastContainer" class="fixed top-6 right-6 z-50 flex flex-col space-y-3 max-w-sm w-full px-4 pointer-events-none"></div>
+    <!-- =========================================
+         BACKGROUND: LIVE 3D / PARTICLE LAYER
+         JavaScript will animate these elements.
+    ========================================== -->
 
-    <!-- Main Content Interface -->
-    <div class="relative z-10 min-h-screen flex flex-col justify-between py-8 px-4 sm:px-6">
-        
-        <!-- Header Section -->
-        <header class="text-center max-w-2xl mx-auto mt-4">
-            <div class="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold px-3 py-1 rounded-full mb-3 backdrop-blur-md">
-                <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
-                <span>n8n Webhook Trigger Center</span>
+    <div class="universe-background" aria-hidden="true">
+        <canvas id="particle-canvas"></canvas>
+
+        <div class="ambient-glow ambient-glow--blue"></div>
+        <div class="ambient-glow ambient-glow--purple"></div>
+        <div class="ambient-glow ambient-glow--cyan"></div>
+
+        <div class="background-grid"></div>
+        <div class="background-noise"></div>
+        <div class="background-vignette"></div>
+    </div>
+
+
+    <!-- =========================================
+         APPLICATION SHELL
+    ========================================== -->
+
+    <div class="app-shell" id="app">
+
+        <!-- TOP NAVIGATION -->
+
+        <header class="topbar" id="top">
+
+            <a class="brand" href="#top" aria-label="NovaFlow Home">
+
+                <span class="brand-logo-wrap">
+                    <!-- Upload your logo to this exact path in GitHub -->
+                    <img
+                        class="brand-logo"
+                        src="./assets/novaflow-logo.png"
+                        alt="NovaFlow Logo"
+                        onerror="this.hidden=true; this.nextElementSibling.hidden=false;"
+                    >
+
+                    <span class="brand-logo-fallback" hidden>
+                        N
+                    </span>
+                </span>
+
+                <span class="brand-copy">
+                    <span class="brand-name">NovaFlow<span class="brand-dot">.</span></span>
+                    <span class="brand-tagline">AUTOMATE · EXPLORE · GROW</span>
+                </span>
+
+            </a>
+
+
+            <nav class="main-navigation" aria-label="Main navigation">
+
+                <a class="nav-link active" href="#home">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </a>
+
+                <a class="nav-link" href="#features">
+                    <i class="fa-solid fa-cubes"></i>
+                    <span>Features</span>
+                </a>
+
+                <a class="nav-link" href="#activity">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Activity</span>
+                </a>
+
+                <a class="nav-link" href="#about">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>About</span>
+                </a>
+
+            </nav>
+
+
+            <div class="topbar-right">
+
+                <div class="system-status" id="system-status">
+
+                    <span class="status-indicator"></span>
+
+                    <span class="status-copy">
+                        <span class="status-title" id="system-status-title">
+                            System Ready
+                        </span>
+
+                        <span class="status-subtitle">
+                            NovaFlow Core v1.0
+                        </span>
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="mobile-menu-button"
+                    id="mobile-menu-button"
+                    type="button"
+                    aria-label="Toggle navigation"
+                    aria-expanded="false"
+                >
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
             </div>
-            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400">
-                Automated Workflows
-            </h1>
-            <p class="text-slate-400 text-sm sm:text-base mt-2">
-                Aap ke automated tasks chalane ke liye central control panel. Below button par click karke n8n trigger start karein.
-            </p>
+
         </header>
 
-        <!-- Center 3 Action Cards Container -->
-        <main class="max-w-xl w-full mx-auto my-auto py-8 space-y-5">
 
-            <!-- Card 1: Ebay Winning Product Hunting -->
-            <div class="glass-card rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-4">
-                <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-ebay-blue text-xl flex-shrink-0">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                    </div>
-                    <div>
-                        <span class="text-[10px] font-bold tracking-widest text-blue-400 uppercase">eBay Automation</span>
-                        <h2 class="text-base sm:text-lg font-bold text-slate-100">Ebay Winning Product Hunting</h2>
-                        <p class="text-xs text-slate-400 mt-0.5">Triggers n8n product hunting bot</p>
-                    </div>
-                </div>
-                <div>
-                    <button onclick="triggerEbayWebhook(this)" class="glow-btn bg-gradient-to-r from-ebay-blue to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition flex items-center space-x-2 cursor-pointer">
-                        <span class="btn-text">Start</span>
-                        <i class="fa-solid fa-play text-xs btn-icon"></i>
-                    </button>
-                </div>
-            </div>
 
-            <!-- Card 2: Upcoming Feature 2 -->
-            <div class="glass-card rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-4 opacity-80 hover:opacity-100">
-                <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-xl flex-shrink-0">
-                        <i class="fa-solid fa-bolt"></i>
-                    </div>
-                    <div>
-                        <span class="text-[10px] font-bold tracking-widest text-amber-400 uppercase">Automation Tool 02</span>
-                        <h2 class="text-base sm:text-lg font-bold text-slate-200">Upcoming Feature #2</h2>
-                        <p class="text-xs text-slate-400 mt-0.5">Automated Amazon to eBay Lister</p>
-                    </div>
-                </div>
-                <div>
-                    <button onclick="showUpcomingToast('Upcoming Feature #2')" class="bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700 text-sm font-medium px-5 py-2.5 rounded-xl transition flex items-center space-x-2 cursor-pointer">
-                        <span>Start</span>
-                        <i class="fa-solid fa-lock text-xs text-slate-500"></i>
-                    </button>
-                </div>
-            </div>
+        <!-- =========================================
+             HERO SECTION
+        ========================================== -->
 
-            <!-- Card 3: Upcoming Feature 3 -->
-            <div class="glass-card rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-4 opacity-80 hover:opacity-100">
-                <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 text-xl flex-shrink-0">
-                        <i class="fa-solid fa-chart-line"></i>
+        <main>
+
+            <section class="hero-section" id="home">
+
+                <div class="hero-copy">
+
+                    <div class="eyebrow">
+                        <span class="eyebrow-line"></span>
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>THE NEXT GENERATION OF AUTOMATION</span>
                     </div>
+
+
+                    <h1 class="hero-title">
+                        Turn Ideas Into
+                        <span class="gradient-text">Intelligent</span>
+                        <span class="gradient-text gradient-text--alt">
+                            Automation.
+                        </span>
+                    </h1>
+
+
+                    <p class="hero-description">
+                        One interface. Limitless possibilities.
+
+                        NovaFlow connects powerful workflows with an
+                        interface engineered for people who build,
+                        experiment and think beyond the ordinary.
+                    </p>
+
+
+                    <div class="hero-actions">
+
+                        <a class="hero-primary-action" href="#features">
+                            <span>Explore Command Center</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+
+                        <a class="hero-secondary-action" href="#activity">
+                            <i class="fa-solid fa-terminal"></i>
+                            <span>View System Activity</span>
+                        </a>
+
+                    </div>
+
+
+                    <div class="hero-capabilities">
+
+                        <div class="capability">
+                            <span class="capability-icon">
+                                <i class="fa-solid fa-bolt"></i>
+                            </span>
+                            <span>Instant Triggers</span>
+                        </div>
+
+                        <div class="capability">
+                            <span class="capability-icon">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </span>
+                            <span>Workflow Control</span>
+                        </div>
+
+                        <div class="capability">
+                            <span class="capability-icon">
+                                <i class="fa-solid fa-brain"></i>
+                            </span>
+                            <span>AI-Powered</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- HOLOGRAPHIC 3D CORE -->
+
+                <div class="hero-visual" aria-label="NovaFlow futuristic visual">
+
+                    <div class="visual-coordinate coordinate-top">
+                        <span class="coordinate-dot"></span>
+                        CORE SYSTEM
+                    </div>
+
+
+                    <div class="hologram-scene" id="hologram-scene">
+
+                        <div class="hologram-grid"></div>
+
+                        <div class="orbit orbit--outer">
+                            <span class="orbit-node orbit-node--one"></span>
+                            <span class="orbit-node orbit-node--two"></span>
+                        </div>
+
+                        <div class="orbit orbit--middle">
+                            <span class="orbit-node orbit-node--three"></span>
+                        </div>
+
+                        <div class="orbit orbit--inner"></div>
+
+
+                        <div class="energy-rings">
+
+                            <span class="energy-ring energy-ring--one"></span>
+                            <span class="energy-ring energy-ring--two"></span>
+                            <span class="energy-ring energy-ring--three"></span>
+
+                        </div>
+
+
+                        <div class="core-platform">
+
+                            <div class="core-platform-top"></div>
+
+                            <div class="core-platform-body">
+
+                                <div class="core-platform-light"></div>
+
+                                <div class="core-emblem">
+                                    <span class="core-emblem-letter">N</span>
+                                </div>
+
+                                <span class="core-platform-label">
+                                    NOVAFLOW CORE
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="floating-data floating-data--one">
+                            <span class="floating-data-icon">
+                                <i class="fa-solid fa-bolt"></i>
+                            </span>
+
+                            <span class="floating-data-copy">
+                                <span>Execution Engine</span>
+                                <strong>READY</strong>
+                            </span>
+                        </div>
+
+
+                        <div class="floating-data floating-data--two">
+                            <span class="floating-data-icon">
+                                <i class="fa-solid fa-network-wired"></i>
+                            </span>
+
+                            <span class="floating-data-copy">
+                                <span>Workflow Network</span>
+                                <strong>CONNECTED</strong>
+                            </span>
+                        </div>
+
+
+                        <div class="floating-data floating-data--three">
+                            <span class="floating-data-icon">
+                                <i class="fa-solid fa-microchip"></i>
+                            </span>
+
+                            <span class="floating-data-copy">
+                                <span>Intelligence Layer</span>
+                                <strong>STANDBY</strong>
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="visual-coordinate coordinate-bottom">
+                        <span>LATENCY OPTIMIZED</span>
+                        <span class="coordinate-separator">/</span>
+                        <span>WORKFLOW DRIVEN</span>
+                    </div>
+
+                </div>
+
+
+
+                <!-- WEBHOOK INFORMATION PANEL -->
+
+                <aside class="webhook-panel" aria-label="Webhook configuration">
+
+                    <div class="panel-heading">
+
+                        <div class="panel-heading-left">
+                            <span class="panel-icon">
+                                <i class="fa-solid fa-code"></i>
+                            </span>
+
+                            <div>
+                                <h2>Webhook Interface</h2>
+                                <p>External workflow connection</p>
+                            </div>
+                        </div>
+
+                        <span class="connection-badge" id="webhook-status">
+                            <span class="status-indicator"></span>
+                            Ready
+                        </span>
+
+                    </div>
+
+
+                    <div class="webhook-code-header">
+                        <span class="code-language">JSON</span>
+                        <span class="code-file-name">request.body</span>
+                    </div>
+
+
+                    <pre class="webhook-code"><code>{
+  <span class="json-key">"action"</span>: <span class="json-string">"ebay_winning_product_hunting"</span>,
+  <span class="json-key">"timestamp"</span>: <span class="json-string">"ISO_DATE"</span>
+}</code></pre>
+
+
+                    <div class="webhook-details">
+
+                        <div class="webhook-detail-row">
+                            <span>METHOD</span>
+                            <strong class="method-badge">POST</strong>
+                        </div>
+
+                        <div class="webhook-detail-row">
+                            <span>PROVIDER</span>
+                            <strong>n8n Cloud</strong>
+                        </div>
+
+                        <div class="webhook-detail-row webhook-detail-row--url">
+                            <span>ENDPOINT</span>
+
+                            <a
+                                id="webhook-url-display"
+                                class="webhook-url"
+                                href="https://test41.app.n8n.cloud/webhook/482c900a-65ae-403b-8be7-9fc249a671f7"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                test41.app.n8n.cloud/webhook/482c900a-65ae-403b-8be7-9fc249a671f7
+                            </a>
+                        </div>
+
+                    </div>
+
+
+                    <div class="webhook-panel-footer">
+                        <span>
+                            <i class="fa-solid fa-lock"></i>
+                            Webhook configured
+                        </span>
+
+                        <span class="webhook-pulse-label">
+                            <span class="status-indicator"></span>
+                            STANDBY
+                        </span>
+                    </div>
+
+                </aside>
+
+            </section>
+
+
+
+            <!-- =========================================
+                 FEATURE CARDS
+            ========================================== -->
+
+            <section class="features-section" id="features">
+
+                <div class="section-heading">
+
+                    <div class="section-heading-copy">
+
+                        <div class="eyebrow">
+                            <span class="eyebrow-line"></span>
+                            <span>YOUR AUTOMATION HUB</span>
+                        </div>
+
+                        <h2>
+                            Choose Your
+                            <span class="gradient-text">Next Move.</span>
+                        </h2>
+
+                        <p>
+                            Powerful actions, one click away.
+                            Select a module to get started.
+                        </p>
+
+                    </div>
+
+
+                    <div class="section-counter">
+                        <span class="section-counter-value">03</span>
+                        <span class="section-counter-label">
+                            AUTOMATION MODULES
+                        </span>
+                    </div>
+
+                </div>
+
+
+
+                <div class="feature-grid">
+
+
+                    <!-- FEATURE 01: EBAY PRODUCT HUNTING -->
+
+                    <article
+                        class="feature-card feature-card--primary"
+                        id="feature-ebay"
+                        data-feature="ebay"
+                    >
+
+                        <div class="feature-card-top">
+
+                            <span class="feature-label feature-label--featured">
+                                <i class="fa-solid fa-star"></i>
+                                FEATURED MODULE
+                            </span>
+
+                            <span class="feature-state" id="ebay-card-status">
+                                <span class="status-indicator"></span>
+                                READY
+                            </span>
+
+                        </div>
+
+
+                        <div class="feature-icon-wrap feature-icon-wrap--ebay">
+
+                            <div class="feature-icon-halo"></div>
+
+                            <div class="feature-icon">
+                                <i class="fa-brands fa-ebay"></i>
+                            </div>
+
+                            <span class="feature-orbit-dot"></span>
+
+                        </div>
+
+
+                        <div class="feature-card-content">
+
+                            <div class="feature-index">MODULE / 001</div>
+
+                            <h3>eBay Winning Product Hunting</h3>
+
+                            <p>
+                                Profitable product discovery.
+                                Smarter research. Better opportunities.
+                                Start your hunting workflow with one click.
+                            </p>
+
+                        </div>
+
+
+                        <div class="feature-tags">
+                            <span>PRODUCT RESEARCH</span>
+                            <span>n8n WORKFLOW</span>
+                        </div>
+
+
+                        <button
+                            class="feature-button feature-button--primary"
+                            id="start-hunting-button"
+                            type="button"
+                            data-action="ebay_winning_product_hunting"
+                        >
+
+                            <span class="button-content">
+                                <i class="fa-solid fa-play button-icon"></i>
+                                <span class="button-label">Start Hunting</span>
+                            </span>
+
+                            <span class="button-loading" hidden>
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+                                <span>Launching Workflow...</span>
+                            </span>
+
+                            <i class="fa-solid fa-arrow-right button-arrow"></i>
+
+                        </button>
+
+
+                        <div class="feature-card-decoration" aria-hidden="true">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+
+                    </article>
+
+
+
+                    <!-- FEATURE 02: COMING SOON -->
+
+                    <article
+                        class="feature-card feature-card--locked"
+                        id="feature-two"
+                        data-feature="upcoming-two"
+                    >
+
+                        <div class="feature-card-top">
+
+                            <span class="feature-label">
+                                <i class="fa-solid fa-lock"></i>
+                                RESTRICTED MODULE
+                            </span>
+
+                            <span class="feature-state feature-state--locked">
+                                LOCKED
+                            </span>
+
+                        </div>
+
+
+                        <div class="feature-icon-wrap feature-icon-wrap--two">
+
+                            <div class="feature-icon-halo"></div>
+
+                            <div class="feature-icon">
+                                <i class="fa-solid fa-rocket"></i>
+                            </div>
+
+                        </div>
+
+
+                        <div class="feature-card-content">
+
+                            <div class="feature-index">MODULE / 002</div>
+
+                            <h3>Upcoming Feature #2</h3>
+
+                            <p>
+                                A new layer of automation is being prepared.
+                                An entirely new capability is on its way.
+                            </p>
+
+                        </div>
+
+
+                        <div class="feature-tags">
+                            <span>IN DEVELOPMENT</span>
+                            <span>CLASSIFIED</span>
+                        </div>
+
+
+                        <button
+                            class="feature-button feature-button--locked"
+                            type="button"
+                            data-action="coming-soon"
+                            data-feature-name="Upcoming Feature #2"
+                        >
+                            <i class="fa-solid fa-lock"></i>
+                            <span>Coming Soon</span>
+                        </button>
+
+
+                        <div class="feature-card-decoration" aria-hidden="true">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+
+                    </article>
+
+
+
+                    <!-- FEATURE 03: COMING SOON -->
+
+                    <article
+                        class="feature-card feature-card--locked"
+                        id="feature-three"
+                        data-feature="upcoming-three"
+                    >
+
+                        <div class="feature-card-top">
+
+                            <span class="feature-label">
+                                <i class="fa-solid fa-lock"></i>
+                                RESTRICTED MODULE
+                            </span>
+
+                            <span class="feature-state feature-state--locked">
+                                LOCKED
+                            </span>
+
+                        </div>
+
+
+                        <div class="feature-icon-wrap feature-icon-wrap--three">
+
+                            <div class="feature-icon-halo"></div>
+
+                            <div class="feature-icon">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
+
+                        </div>
+
+
+                        <div class="feature-card-content">
+
+                            <div class="feature-index">MODULE / 003</div>
+
+                            <h3>Upcoming Feature #3</h3>
+
+                            <p>
+                                The next evolution of intelligent workflows.
+                                More possibilities. A bigger vision.
+                            </p>
+
+                        </div>
+
+
+                        <div class="feature-tags">
+                            <span>FUTURE MODULE</span>
+                            <span>CLASSIFIED</span>
+                        </div>
+
+
+                        <button
+                            class="feature-button feature-button--locked"
+                            type="button"
+                            data-action="coming-soon"
+                            data-feature-name="Upcoming Feature #3"
+                        >
+                            <i class="fa-solid fa-lock"></i>
+                            <span>Coming Soon</span>
+                        </button>
+
+
+                        <div class="feature-card-decoration" aria-hidden="true">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =========================================
+                 SYSTEM MONITOR / ACTIVITY
+            ========================================== -->
+
+            <section class="system-dashboard" id="activity">
+
+                <div class="dashboard-heading">
+
                     <div>
-                        <span class="text-[10px] font-bold tracking-widest text-purple-400 uppercase">Automation Tool 03</span>
-                        <h2 class="text-base sm:text-lg font-bold text-slate-200">Upcoming Feature #3</h2>
-                        <p class="text-xs text-slate-400 mt-0.5">Competitor Price Tracker Bot</p>
+                        <div class="eyebrow">
+                            <span class="eyebrow-line"></span>
+                            <span>REAL-TIME INTERFACE</span>
+                        </div>
+
+                        <h2>System Monitor</h2>
                     </div>
+
+                    <div class="monitor-status">
+                        <span class="status-indicator"></span>
+                        <span>LOCAL INTERFACE ACTIVE</span>
+                    </div>
+
                 </div>
-                <div>
-                    <button onclick="showUpcomingToast('Upcoming Feature #3')" class="bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700 text-sm font-medium px-5 py-2.5 rounded-xl transition flex items-center space-x-2 cursor-pointer">
-                        <span>Start</span>
-                        <i class="fa-solid fa-lock text-xs text-slate-500"></i>
-                    </button>
+
+
+
+                <div class="dashboard-grid">
+
+
+                    <!-- ACTIVITY TERMINAL -->
+
+                    <section class="dashboard-panel activity-panel">
+
+                        <div class="dashboard-panel-heading">
+
+                            <div class="panel-title-wrap">
+                                <i class="fa-solid fa-terminal"></i>
+
+                                <div>
+                                    <h3>Activity Terminal</h3>
+                                    <p>Recent interface events</p>
+                                </div>
+                            </div>
+
+                            <span class="terminal-window-controls">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </span>
+
+                        </div>
+
+
+                        <div class="terminal-window">
+
+                            <div class="terminal-line terminal-line--system">
+                                <span class="terminal-prompt">›</span>
+                                <span class="terminal-time">[SYSTEM]</span>
+                                <span>NovaFlow interface initialized.</span>
+                            </div>
+
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">›</span>
+                                <span class="terminal-time">[CORE]</span>
+                                <span>Automation modules loaded.</span>
+                            </div>
+
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">›</span>
+                                <span class="terminal-time">[N8N]</span>
+                                <span>Webhook configuration available.</span>
+                            </div>
+
+                            <div class="terminal-line terminal-line--muted">
+                                <span class="terminal-prompt">›</span>
+                                <span class="terminal-time">[READY]</span>
+                                <span>Awaiting user command...</span>
+                            </div>
+
+                            <!-- JavaScript will append activity here -->
+                            <div
+                                class="terminal-dynamic-output"
+                                id="terminal-output"
+                                aria-live="polite"
+                            ></div>
+
+                            <div class="terminal-cursor-line" aria-hidden="true">
+                                <span class="terminal-prompt">›</span>
+                                <span class="terminal-cursor"></span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="terminal-footer">
+                            <span>
+                                <i class="fa-solid fa-circle"></i>
+                                COMMAND INTERFACE
+                            </span>
+
+                            <button
+                                class="text-action"
+                                type="button"
+                                id="clear-activity-button"
+                            >
+                                Clear log
+                                <i class="fa-solid fa-arrow-rotate-left"></i>
+                            </button>
+                        </div>
+
+                    </section>
+
+
+
+                    <!-- SYSTEM METRICS -->
+
+                    <section class="dashboard-panel metrics-panel">
+
+                        <div class="dashboard-panel-heading">
+
+                            <div class="panel-title-wrap">
+                                <i class="fa-solid fa-chart-simple"></i>
+
+                                <div>
+                                    <h3>Core Overview</h3>
+                                    <p>Interface and workflow status</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="metrics-grid">
+
+                            <article class="metric-card">
+
+                                <div class="metric-icon metric-icon--blue">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </div>
+
+                                <div class="metric-value" id="metric-executions">
+                                    00
+                                </div>
+
+                                <div class="metric-label">
+                                    Session Triggers
+                                </div>
+
+                                <span class="metric-note">
+                                    THIS SESSION
+                                </span>
+
+                            </article>
+
+
+                            <article class="metric-card">
+
+                                <div class="metric-icon metric-icon--purple">
+                                    <i class="fa-solid fa-cubes"></i>
+                                </div>
+
+                                <div class="metric-value">
+                                    03
+                                </div>
+
+                                <div class="metric-label">
+                                    Modules
+                                </div>
+
+                                <span class="metric-note">
+                                    01 AVAILABLE
+                                </span>
+
+                            </article>
+
+
+                            <article class="metric-card">
+
+                                <div class="metric-icon metric-icon--cyan">
+                                    <i class="fa-solid fa-network-wired"></i>
+                                </div>
+
+                                <div class="metric-value metric-value--text"
+                                     id="metric-connection">
+                                    READY
+                                </div>
+
+                                <div class="metric-label">
+                                    Webhook State
+                                </div>
+
+                                <span class="metric-note">
+                                    REQUEST STATUS
+                                </span>
+
+                            </article>
+
+
+                            <article class="metric-card">
+
+                                <div class="metric-icon metric-icon--green">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+
+                                <div class="metric-value metric-value--text">
+                                    HTTPS
+                                </div>
+
+                                <div class="metric-label">
+                                    Endpoint Security
+                                </div>
+
+                                <span class="metric-note">
+                                    ENCRYPTED TRANSPORT
+                                </span>
+
+                            </article>
+
+                        </div>
+
+
+                        <div class="metrics-disclaimer">
+                            <i class="fa-solid fa-circle-info"></i>
+
+                            <span>
+                                Metrics show this page's local session.
+                                They are not verified n8n server analytics.
+                            </span>
+                        </div>
+
+                    </section>
+
+
+
+                    <!-- AUTOMATION INSIGHT -->
+
+                    <aside class="dashboard-panel insight-panel">
+
+                        <div class="insight-orb">
+                            <div class="insight-orb-ring"></div>
+
+                            <div class="insight-orb-icon">
+                                <i class="fa-solid fa-atom"></i>
+                            </div>
+                        </div>
+
+
+                        <div class="insight-eyebrow">
+                            NOVAFLOW PHILOSOPHY
+                        </div>
+
+
+                        <h3>
+                            Build Beyond
+                            <span class="gradient-text">Limits.</span>
+                        </h3>
+
+
+                        <p>
+                            Turn repetitive tasks into automated workflows
+                            and keep your focus on what matters most.
+                        </p>
+
+
+                        <a class="insight-link" href="#about">
+                            <span>Discover NovaFlow</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+
+
+                        <div class="insight-decoration" aria-hidden="true">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+
+                    </aside>
+
                 </div>
-            </div>
+
+            </section>
+
+
+
+            <!-- =========================================
+                 ABOUT / FOOTER INFORMATION
+            ========================================== -->
+
+            <section class="about-section" id="about">
+
+                <div class="about-content">
+
+                    <span class="about-icon">
+                        <i class="fa-solid fa-infinity"></i>
+                    </span>
+
+                    <div>
+                        <h2>Automation should feel effortless.</h2>
+
+                        <p>
+                            NovaFlow brings your workflow controls into one
+                            focused command center. Designed for creators,
+                            builders and ambitious minds.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="about-meta">
+                    <span>DESIGNED FOR BUILDERS.</span>
+                    <span>ENGINEERED FOR POSSIBILITIES.</span>
+                </div>
+
+            </section>
 
         </main>
 
-        <!-- Footer -->
-        <footer class="text-center text-xs text-slate-500 mb-2">
-            n8n Webhook Trigger Dashboard &bull; Live Connected
+
+
+        <!-- =========================================
+             FOOTER
+        ========================================== -->
+
+        <footer class="site-footer">
+
+            <a class="footer-brand" href="#top">
+
+                <span class="footer-logo-wrap">
+                    <img
+                        src="./assets/novaflow-logo.png"
+                        alt=""
+                        class="footer-logo"
+                    >
+                </span>
+
+                <span class="footer-brand-copy">
+                    <strong>NovaFlow</strong>
+                    <span>Automate. Explore. Grow.</span>
+                </span>
+
+            </a>
+
+
+            <div class="footer-center">
+                <span>POWERED BY YOUR IDEAS</span>
+                <span class="footer-separator">/</span>
+                <span>CONNECTED WITH N8N</span>
+            </div>
+
+
+            <a class="back-to-top" href="#top">
+                Back to top
+                <i class="fa-solid fa-arrow-up"></i>
+            </a>
+
         </footer>
-    </div>
 
-    <!-- JavaScript Logic -->
-    <script>
-        // Webhook URL
-        const TEST_WEBHOOK_URL = 'https://test41.app.n8n.cloud/webhook/482c900a-65ae-403b-8be7-9fc249a671f7';
 
-        // Trigger Webhook for Card 1
-        async function triggerEbayWebhook(btn) {
-            const btnText = btn.querySelector('.btn-text');
-            const btnIcon = btn.querySelector('.btn-icon');
-            
-            // Set Loading state
-            btn.disabled = true;
-            btn.classList.add('opacity-80', 'cursor-not-allowed');
-            btnText.textContent = "Running...";
-            btnIcon.className = "fa-solid fa-spinner fa-spin text-xs btn-icon";
 
-            showToast('info', 'Triggering n8n Workflow...', 'Ebay Winning Product Hunting trigger send ho raha hai.');
+        <!-- =========================================
+             TOAST NOTIFICATION SYSTEM
+             JavaScript will control visibility/content.
+        ========================================== -->
 
-            try {
-                const response = await fetch(TEST_WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'ebay_winning_product_hunting',
-                        timestamp: new Date().toISOString()
-                    })
-                });
+        <div
+            class="toast-container"
+            id="toast-container"
+            aria-live="polite"
+            aria-atomic="false"
+        >
 
-                if (response.ok) {
-                    showToast('success', 'Workflow Triggered!', 'n8n Webhook ne request successfully receive kar li hai.');
-                } else {
-                    showToast('error', `Server Error (${response.status})`, 'n8n Webhook ne non-200 response bheja hai. Check karein ke n8n mein "Listen for test event" active hai.');
-                }
-            } catch (err) {
-                console.error("Webhook Error:", err);
-                showToast('error', 'Trigger Failed!', 'Request send nahi ho saki. Apna internet connection ya n8n Test URL active status check karein.');
-            } finally {
-                // Reset Button state
-                btn.disabled = false;
-                btn.classList.remove('opacity-80', 'cursor-not-allowed');
-                btnText.textContent = "Start";
-                btnIcon.className = "fa-solid fa-play text-xs btn-icon";
-            }
-        }
+            <div
+                class="toast toast--success"
+                id="toast-success"
+                role="status"
+                hidden
+            >
+                <span class="toast-icon">
+                    <i class="fa-solid fa-circle-check"></i>
+                </span>
 
-        // Upcoming Toast Function
-        function showUpcomingToast(featureName) {
-            showToast('warning', 'Work in Progress', `${featureName} abhi tayyar ho raha hai. Soon active ho jayega!`);
-        }
-
-        // Custom Toast Notification System
-        function showToast(type, title, message) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            
-            let iconClass = 'fa-circle-info text-blue-400';
-            let borderColor = 'border-blue-500/40';
-            let bgGlow = 'bg-slate-900/90';
-
-            if (type === 'success') {
-                iconClass = 'fa-circle-check text-emerald-400';
-                borderColor = 'border-emerald-500/40';
-            } else if (type === 'error') {
-                iconClass = 'fa-circle-xmark text-rose-400';
-                borderColor = 'border-rose-500/40';
-            } else if (type === 'warning') {
-                iconClass = 'fa-triangle-exclamation text-amber-400';
-                borderColor = 'border-amber-500/40';
-            }
-
-            toast.className = `toast-animate pointer-events-auto p-4 rounded-xl border ${borderColor} ${bgGlow} backdrop-blur-xl shadow-2xl flex items-start space-x-3 text-slate-100`;
-            toast.innerHTML = `
-                <i class="fa-solid ${iconClass} text-lg mt-0.5"></i>
-                <div class="flex-1 pr-2">
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-200">${title}</h4>
-                    <p class="text-xs text-slate-400 mt-1">${message}</p>
+                <div class="toast-content">
+                    <strong class="toast-title">Workflow Triggered</strong>
+                    <p class="toast-message">
+                        Request successfully processed.
+                    </p>
                 </div>
-                <button onclick="this.parentElement.remove()" class="text-slate-500 hover:text-slate-300 text-xs">
+
+                <button
+                    class="toast-close"
+                    type="button"
+                    aria-label="Close notification"
+                    data-dismiss-toast
+                >
                     <i class="fa-solid fa-xmark"></i>
                 </button>
-            `;
+            </div>
 
-            container.appendChild(toast);
 
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.4s ease';
-                setTimeout(() => toast.remove(), 400);
-            }, 4500);
-        }
+            <div
+                class="toast toast--error"
+                id="toast-error"
+                role="alert"
+                hidden
+            >
+                <span class="toast-icon">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                </span>
 
-        // Dynamic Interactive Canvas Particle Background
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
+                <div class="toast-content">
+                    <strong class="toast-title">Request Failed</strong>
+                    <p class="toast-message">
+                        The request could not be confirmed.
+                    </p>
+                </div>
 
-        let width, height;
-        let particles = [];
-        let mouse = { x: null, y: null, radius: 150 };
+                <button
+                    class="toast-close"
+                    type="button"
+                    aria-label="Close notification"
+                    data-dismiss-toast
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
 
-        function resizeCanvas() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            initParticles();
-        }
 
-        window.addEventListener('resize', resizeCanvas);
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.x;
-            mouse.y = e.y;
-        });
-        window.addEventListener('mouseleave', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
+            <div
+                class="toast toast--info"
+                id="toast-info"
+                role="status"
+                hidden
+            >
+                <span class="toast-icon">
+                    <i class="fa-solid fa-sparkles"></i>
+                </span>
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.radius = Math.random() * 2 + 1;
-                this.vx = (Math.random() - 0.5) * 0.8;
-                this.vy = (Math.random() - 0.5) * 0.8;
-                this.baseAlpha = Math.random() * 0.5 + 0.2;
-            }
+                <div class="toast-content">
+                    <strong class="toast-title">Coming Soon</strong>
+                    <p class="toast-message">
+                        This module is being developed.
+                    </p>
+                </div>
 
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(59, 130, 246, ${this.baseAlpha})`;
-                ctx.fill();
-            }
+                <button
+                    class="toast-close"
+                    type="button"
+                    aria-label="Close notification"
+                    data-dismiss-toast
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
 
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
+        </div>
 
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
 
-                // Mouse interaction
-                if (mouse.x && mouse.y) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < mouse.radius) {
-                        this.x -= (dx / dist) * 1.5;
-                        this.y -= (dy / dist) * 1.5;
-                    }
-                }
 
-                this.draw();
-            }
-        }
+        <!-- SCREEN READER ANNOUNCEMENTS -->
 
-        function initParticles() {
-            particles = [];
-            const count = Math.floor((width * height) / 12000);
-            for (let i = 0; i < count; i++) {
-                particles.push(new Particle());
-            }
-        }
+        <div
+            class="visually-hidden"
+            id="accessibility-announcer"
+            aria-live="polite"
+            aria-atomic="true"
+        ></div>
 
-        function connectParticles() {
-            for (let a = 0; a < particles.length; a++) {
-                for (let b = a + 1; b < particles.length; b++) {
-                    let dx = particles[a].x - particles[b].x;
-                    let dy = particles[a].y - particles[b].y;
-                    let dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist < 120) {
-                        let opacity = (1 - dist / 120) * 0.25;
-                        ctx.strokeStyle = `rgba(0, 100, 210, ${opacity})`;
-                        ctx.lineWidth = 0.8;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[a].x, particles[a].y);
-                        ctx.lineTo(particles[b].x, particles[b].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
+    </div>
 
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            particles.forEach(p => p.update());
-            connectParticles();
-            requestAnimationFrame(animate);
-        }
 
-        // Initialize on load
-        window.onload = () => {
-            resizeCanvas();
-            animate();
-        };
-    </script>
+
+    <!-- =========================================
+         CONFIGURATION FOR JAVASCRIPT
+         No JavaScript code is embedded in this HTML.
+    ========================================== -->
+
+    <script
+        src="./script.js"
+        defer
+    ></script>
+
 </body>
 </html>
