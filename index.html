@@ -1,86 +1,385 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GURU | AI Social Architecture</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Poppins:wght@200;400;600&display=swap" rel="stylesheet">
-</head>
-<body>
+    <title>Automated Workflows Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    },
+                    colors: {
+                        ebay: {
+                            blue: '#0064D2',
+                            red: '#E53238',
+                            yellow: '#F5AF02',
+                            green: '#86B817'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
-    <!-- Background Video Layer -->
-    <div class="video-container">
-        <video autoplay muted loop id="bg-video">
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-blue-and-purple-dots-9346-large.mp4" type="video/mp4">
-        </video>
-        <div class="overlay"></div>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+            overflow-x: hidden;
+        }
+
+        /* Fullscreen Canvas Background */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: auto;
+        }
+
+        /* Glassmorphism Styles */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgba(0, 100, 210, 0.25);
+        }
+
+        .glow-btn {
+            position: relative;
+            box-shadow: 0 0 15px rgba(0, 100, 210, 0.35);
+            transition: all 0.3s ease;
+        }
+
+        .glow-btn:hover {
+            box-shadow: 0 0 25px rgba(0, 100, 210, 0.65);
+            transform: translateY(-1px);
+        }
+
+        /* Toast Animation */
+        @keyframes slideIn {
+            from { transform: translateY(-100%) scale(0.9); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .toast-animate {
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col justify-between relative selection:bg-blue-500 selection:text-white">
+
+    <!-- Interactive Particle Background -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-6 right-6 z-50 flex flex-col space-y-3 max-w-sm w-full px-4 pointer-events-none"></div>
+
+    <!-- Main Content Interface -->
+    <div class="relative z-10 min-h-screen flex flex-col justify-between py-8 px-4 sm:px-6">
+        
+        <!-- Header Section -->
+        <header class="text-center max-w-2xl mx-auto mt-4">
+            <div class="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold px-3 py-1 rounded-full mb-3 backdrop-blur-md">
+                <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
+                <span>n8n Webhook Trigger Center</span>
+            </div>
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400">
+                Automated Workflows
+            </h1>
+            <p class="text-slate-400 text-sm sm:text-base mt-2">
+                Aap ke automated tasks chalane ke liye central control panel. Below button par click karke n8n trigger start karein.
+            </p>
+        </header>
+
+        <!-- Center 3 Action Cards Container -->
+        <main class="max-w-xl w-full mx-auto my-auto py-8 space-y-5">
+
+            <!-- Card 1: Ebay Winning Product Hunting -->
+            <div class="glass-card rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-4">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-ebay-blue text-xl flex-shrink-0">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-bold tracking-widest text-blue-400 uppercase">eBay Automation</span>
+                        <h2 class="text-base sm:text-lg font-bold text-slate-100">Ebay Winning Product Hunting</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Triggers n8n product hunting bot</p>
+                    </div>
+                </div>
+                <div>
+                    <button onclick="triggerEbayWebhook(this)" class="glow-btn bg-gradient-to-r from-ebay-blue to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition flex items-center space-x-2 cursor-pointer">
+                        <span class="btn-text">Start</span>
+                        <i class="fa-solid fa-play text-xs btn-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 2: Upcoming Feature 2 -->
+            <div class="glass-card rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-4 opacity-80 hover:opacity-100">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-xl flex-shrink-0">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-bold tracking-widest text-amber-400 uppercase">Automation Tool 02</span>
+                        <h2 class="text-base sm:text-lg font-bold text-slate-200">Upcoming Feature #2</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Automated Amazon to eBay Lister</p>
+                    </div>
+                </div>
+                <div>
+                    <button onclick="showUpcomingToast('Upcoming Feature #2')" class="bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700 text-sm font-medium px-5 py-2.5 rounded-xl transition flex items-center space-x-2 cursor-pointer">
+                        <span>Start</span>
+                        <i class="fa-solid fa-lock text-xs text-slate-500"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 3: Upcoming Feature 3 -->
+            <div class="glass-card rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-4 opacity-80 hover:opacity-100">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 text-xl flex-shrink-0">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-bold tracking-widest text-purple-400 uppercase">Automation Tool 03</span>
+                        <h2 class="text-base sm:text-lg font-bold text-slate-200">Upcoming Feature #3</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Competitor Price Tracker Bot</p>
+                    </div>
+                </div>
+                <div>
+                    <button onclick="showUpcomingToast('Upcoming Feature #3')" class="bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700 text-sm font-medium px-5 py-2.5 rounded-xl transition flex items-center space-x-2 cursor-pointer">
+                        <span>Start</span>
+                        <i class="fa-solid fa-lock text-xs text-slate-500"></i>
+                    </button>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="text-center text-xs text-slate-500 mb-2">
+            n8n Webhook Trigger Dashboard &bull; Live Connected
+        </footer>
     </div>
 
-    <!-- Navigation -->
-    <nav>
-        <div class="logo">GURU<span>.</span></div>
-        <div class="nav-links">
-            <a href="#services">Services</a>
-            <a href="#plans">Celebrity Tiers</a>
-            <button class="btn-contact">Get Access</button>
-        </div>
-    </nav>
+    <!-- JavaScript Logic -->
+    <script>
+        // Webhook URL
+        const TEST_WEBHOOK_URL = 'https://test41.app.n8n.cloud/webhook-test/482c900a-65ae-403b-8be7-9fc249a671f7';
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="glitch" data-text="EVOLVE YOUR DIGITAL SOUL">EVOLVE YOUR DIGITAL SOUL</h1>
-            <p>We manage, create, and publicize. For freelancers, icons, and legends.</p>
-            <div class="hero-btns">
-                <a href="#plans" class="main-btn">Choose Your Plan</a>
-                <a href="#" class="sec-btn">How it Works</a>
-            </div>
-        </div>
-    </section>
+        // Trigger Webhook for Card 1
+        async function triggerEbayWebhook(btn) {
+            const btnText = btn.querySelector('.btn-text');
+            const btnIcon = btn.querySelector('.btn-icon');
+            
+            // Set Loading state
+            btn.disabled = true;
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+            btnText.textContent = "Running...";
+            btnIcon.className = "fa-solid fa-spinner fa-spin text-xs btn-icon";
 
-    <!-- Pricing / Celebrity Section -->
-    <section id="plans" class="pricing">
-        <h2 class="section-title">CHOOSE YOUR RADIANCE</h2>
-        <div class="grid">
-            <div class="card">
-                <h3>Freelancer</h3>
-                <div class="price">$499<span>/mo</span></div>
-                <ul>
-                    <li>Daily Post Management</li>
-                    <li>2 Social Platforms</li>
-                    <li>Basic Growth Analytics</li>
-                </ul>
-                <button>Initiate</button>
-            </div>
-            <div class="card premium">
-                <div class="badge">Most Popular</div>
-                <h3>Public Figure</h3>
-                <div class="price">$1,999<span>/mo</span></div>
-                <ul>
-                    <li>Multi-Platform Sync</li>
-                    <li>Content Creation Team</li>
-                    <li>PR & Publicity Blitz</li>
-                </ul>
-                <button>Initiate</button>
-            </div>
-            <div class="card">
-                <h3>Icon / Celebrity</h3>
-                <div class="price">Custom</div>
-                <ul>
-                    <li>24/7 Dedicated Agent</li>
-                    <li>Global Press Access</li>
-                    <li>Full Account Automation</li>
-                </ul>
-                <button>Contact Guru</button>
-            </div>
-        </div>
-    </section>
+            showToast('info', 'Triggering n8n Workflow...', 'Ebay Winning Product Hunting trigger send ho raha hai.');
 
-    <!-- 3D Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="script.js"></script>
+            try {
+                const response = await fetch(TEST_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'ebay_winning_product_hunting',
+                        timestamp: new Date().toISOString()
+                    })
+                });
+
+                if (response.ok) {
+                    showToast('success', 'Workflow Triggered!', 'n8n Webhook ne request successfully receive kar li hai.');
+                } else {
+                    showToast('error', `Server Error (${response.status})`, 'n8n Webhook ne non-200 response bheja hai. Check karein ke n8n mein "Listen for test event" active hai.');
+                }
+            } catch (err) {
+                console.error("Webhook Error:", err);
+                showToast('error', 'Trigger Failed!', 'Request send nahi ho saki. Apna internet connection ya n8n Test URL active status check karein.');
+            } finally {
+                // Reset Button state
+                btn.disabled = false;
+                btn.classList.remove('opacity-80', 'cursor-not-allowed');
+                btnText.textContent = "Start";
+                btnIcon.className = "fa-solid fa-play text-xs btn-icon";
+            }
+        }
+
+        // Upcoming Toast Function
+        function showUpcomingToast(featureName) {
+            showToast('warning', 'Work in Progress', `${featureName} abhi tayyar ho raha hai. Soon active ho jayega!`);
+        }
+
+        // Custom Toast Notification System
+        function showToast(type, title, message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            let iconClass = 'fa-circle-info text-blue-400';
+            let borderColor = 'border-blue-500/40';
+            let bgGlow = 'bg-slate-900/90';
+
+            if (type === 'success') {
+                iconClass = 'fa-circle-check text-emerald-400';
+                borderColor = 'border-emerald-500/40';
+            } else if (type === 'error') {
+                iconClass = 'fa-circle-xmark text-rose-400';
+                borderColor = 'border-rose-500/40';
+            } else if (type === 'warning') {
+                iconClass = 'fa-triangle-exclamation text-amber-400';
+                borderColor = 'border-amber-500/40';
+            }
+
+            toast.className = `toast-animate pointer-events-auto p-4 rounded-xl border ${borderColor} ${bgGlow} backdrop-blur-xl shadow-2xl flex items-start space-x-3 text-slate-100`;
+            toast.innerHTML = `
+                <i class="fa-solid ${iconClass} text-lg mt-0.5"></i>
+                <div class="flex-1 pr-2">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-200">${title}</h4>
+                    <p class="text-xs text-slate-400 mt-1">${message}</p>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-slate-500 hover:text-slate-300 text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.4s ease';
+                setTimeout(() => toast.remove(), 400);
+            }, 4500);
+        }
+
+        // Dynamic Interactive Canvas Particle Background
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initParticles();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.radius = Math.random() * 2 + 1;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.baseAlpha = Math.random() * 0.5 + 0.2;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(59, 130, 246, ${this.baseAlpha})`;
+                ctx.fill();
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+
+                // Mouse interaction
+                if (mouse.x && mouse.y) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < mouse.radius) {
+                        this.x -= (dx / dist) * 1.5;
+                        this.y -= (dy / dist) * 1.5;
+                    }
+                }
+
+                this.draw();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const count = Math.floor((width * height) / 12000);
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function connectParticles() {
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a + 1; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 120) {
+                        let opacity = (1 - dist / 120) * 0.25;
+                        ctx.strokeStyle = `rgba(0, 100, 210, ${opacity})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => p.update());
+            connectParticles();
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            resizeCanvas();
+            animate();
+        };
+    </script>
 </body>
 </html>
